@@ -3,10 +3,8 @@
 
 # # Project 1
 # MAE 256
-# 
+#
 # Lysha Matsunobu
-
-# In[2]:
 
 
 # import packages
@@ -22,8 +20,6 @@ from matplotlib import colors as mcolors
 
 
 # # Supporting function definitions
-
-# In[3]:
 
 
 def getAngle(x,y):
@@ -65,20 +61,20 @@ def getA2coords(A2_x,A2_y,distance,A=45,B=60):
     e2_r = de2_in_r + origindelta
     e3_r = de3_in_r + origindelta
     e4_r = de4_in_r + origindelta
-    
+
     return e1_r,e2_r,e3_r,e4_r
 
 def getAnglePairs(A1corner,A2corner):
     # find the theta and phi to get from an A1 corner to an A2 corner
-    o_phi_ref = np.array([10,A1corner[1],0]) # origin to phi=0 from corner vector 
-    o_theta_ref = np.array([A1corner[0],A1corner[1],10]) # origin to zenith=0 over corner vector 
-    
+    o_phi_ref = np.array([10,A1corner[1],0]) # origin to phi=0 from corner vector
+    o_theta_ref = np.array([A1corner[0],A1corner[1],10]) # origin to zenith=0 over corner vector
+
     rx_ref_vec = np.array([1,0,0])
     rz_ref_vec = np.array([0,0,1])
-    
+
     topoint_phi = np.array([A2corner[0],A2corner[1],0]) # set the z-component to zero, project onto xy-plane; origin to projected corner
-    topoint_theta = -1*A1corner + A2corner # A1corner to A2corner = corner to origin + origin to A2corner 
-    
+    topoint_theta = -1*A1corner + A2corner # A1corner to A2corner = corner to origin + origin to A2corner
+
     phi = getAngle(rx_ref_vec,topoint_phi)
     theta = getAngle(rz_ref_vec,topoint_theta)
     return phi, theta
@@ -163,7 +159,7 @@ def findF12(N,sidelength):
     # run loop to find max and min thetas and phis
     A1corners = [A1c1,A1c2,A1c3,A1c4]
     A2corners = [A2c1,A2c2,A2c3,A2c4]
-    
+
     # check the range of feasible angles
     phis   = np.empty([4, 4])
     thetas = np.empty([4, 4])
@@ -189,7 +185,7 @@ def findF12(N,sidelength):
     xMax = np.amax(xs)
     yMin = np.amin(ys)
     yMax = np.amax(ys)
-    
+
     # define the plane of A2 by three of its corners -> two vectors
     p0 = A2c1
     p1 = A2c2
@@ -212,13 +208,11 @@ def findF12(N,sidelength):
 
     # Calculate view factor: F_12 = Ncount/N
     F_12 = Ncount/N
-    
+
     return F_12
 
 
 # # Test Convergence
-
-# In[5]:
 
 
 # iterate to find convergence (expect to take ~ 3 minutes)
@@ -231,7 +225,7 @@ viewfactor = np.empty((len(sides),len(Nphotons)))
 i = 0
 for s in sides:
     j = 0
-    for N in Nphotons: 
+    for N in Nphotons:
         k=0
         F12s = np.empty(int(Ns))
         for iteration in np.linspace(1,Ns,Ns):
@@ -256,7 +250,7 @@ ax.semilogx(Nphotons,stderr.iloc[1].values,'o-')
 ax.semilogx(Nphotons,stderr.iloc[2].values,'o-')
 ax.semilogx(Nphotons,stderr.iloc[3].values,'o-')
 ax.semilogx(Nphotons,stderr.iloc[4].values,'o-')
-ax.legend(['1 cm$^2$','2 cm$^2$','3 cm$^2$','4 cm$^2$','5 cm$^2$'],fontsize=14)
+ax.legend(['1 cm$^2$','4 cm$^2$','9 cm$^2$','16 cm$^2$','25 cm$^2$'],fontsize=14)
 ax.set_title('Standard error of the mean (N$_s$=50)',fontsize=20)
 ax.set_xlabel('N$_{photons}$',fontsize=16)
 ax.set_ylabel('standard error', fontsize=16)
@@ -264,9 +258,6 @@ plt.rcParams.update({'font.size': 12})
 
 
 # # Compare to 6-13 in Mills & Coimbra
-
-# In[6]:
-
 
 sides = [1.,2.,3.,4.,5.]
 MCF = np.empty(5)
@@ -303,21 +294,13 @@ ax[1].set_ylabel('Q$_{12}$ [W]')
 
 ax[2].bar(sides,errors,alpha=0.5,width=0.4,color='gray')
 ax[2].set_ylim(-0.3,0)
-ax[2].set_xlabel('surface area [cm$^2$]')
+ax[2].set_xlabel('side length [cm]')
 ax[2].set_ylabel('(Q$_{12}$ - Q$_{12,a}$)/Q$_{12,a}$ [%]')
 
 ax[0].set_title('View factor')
 ax[1].set_title('Radiative flux')
 ax[2].set_title('Percent error')
 
-
 plt.subplots_adjust(hspace=0.4)
 plt.rcParams.update({'font.size': 12})
 plt.show()
-
-
-# In[ ]:
-
-
-
-
